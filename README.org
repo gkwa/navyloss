@@ -1,14 +1,36 @@
 * navyloss
+** motivation
 
-** summary
+Wrap this horrible commandline:
+#+begin_example
+mdfind -onlyin ~/pdev "kMDItemFSContentChangeDate > \$time.now(-86400) && kMDItemFSName == '*.go'"
+#+end_example
 
-This is a description of project navyloss.
+** purpose: give me a rough estimate for the date 2y5s ago
+** gpt prompt
+
+Write golang app to accept age param in the form:
+#+begin_example
+1y -- this represents 1 year
+10M -- this represents 10 months
+10m -- this represents 10 minutes
+200s -- this represents 200 seconds
+34d -- this represents 34 days
+1y23d -- this is 1 year + 23 days
+2d20s -- this is 2 days + 20 seconds
+#+end_example
+
+Use jessevdk/go-flags for flags
+
+use --age with short form -a
 
 ** usage
 
 Example:
 #+begin_example
-make test
-./navyloss --help
-./navyloss --verbose --verbose # for debug
+make install
+navyloss -a 2d # 2 days
+navyloss -a 3.1d # 3.1 days
+navyloss -a 10y5M # 10 years 5 months
+navyloss -a 10y5M3d # 10 years 5 months 3 days
 #+end_example
