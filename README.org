@@ -1,0 +1,14 @@
+* navyloss
+
+** summary
+
+This is a description of project navyloss.
+
+** usage
+
+Example:
+#+begin_example
+make test
+./navyloss --help
+./navyloss --verbose --verbose # for debug
+#+end_example
