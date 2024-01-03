@@ -74,17 +74,19 @@ func PeriodToSeconds(period string) (float64, error) {
 		unit := match[3]
 		switch unit {
 		case "y":
-			totalSeconds += value * (60 * time.Minute * 24 * 365).Seconds() // seconds in a year
+			totalSeconds += float64(value) * (60 * time.Minute * 24 * 365).Seconds() // seconds in a year
 		case "M":
-			totalSeconds += value * (60 * time.Minute * 24 * 7 * 30).Seconds() // seconds in a month
+			totalSeconds += float64(value) * (60 * time.Minute * 24 * 7 * 30).Seconds() // seconds in a month
 		case "w":
-			totalSeconds += value * (60 * time.Minute * 24 * 7).Seconds() // seconds in a week
+			totalSeconds += float64(value) * (60 * time.Minute * 24 * 7).Seconds() // seconds in a week
 		case "d":
-			totalSeconds += value * (60 * time.Minute * 24).Seconds() // seconds in a day
+			totalSeconds += float64(value) * (60 * time.Minute * 24).Seconds() // seconds in a day
+		case "h":
+			totalSeconds += float64(value) * (60 * time.Minute).Seconds() // seconds in an hour
 		case "m":
-			totalSeconds += value * (1 * time.Minute * 60).Seconds() // seconds in a minute
+			totalSeconds += float64(value) * (1 * time.Minute * 60).Seconds() // seconds in a minute
 		case "s":
-			totalSeconds += value
+			totalSeconds += float64(value)
 		}
 	}
 
