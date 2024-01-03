@@ -60,7 +60,7 @@ func run() error {
 }
 
 func PeriodToSeconds(period string) (float64, error) {
-	re := regexp.MustCompile(`(\d+(\.\d+)?)([yMmdsw])`)
+	re := regexp.MustCompile(`(\d+(\.\d+)?)([yMwdhms])`)
 	matches := re.FindAllStringSubmatch(period, -1)
 
 	var totalSeconds float64
