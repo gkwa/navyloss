@@ -14,7 +14,7 @@ import (
 var opts struct {
 	LogFormat string `long:"log-format" choice:"text" choice:"json" default:"text" description:"Log format"`
 	Verbose   []bool `short:"v" long:"verbose" description:"Show verbose debug information, each -v bumps log level"`
-	Age       string `short:"a" long:"age" description:"Age parameter in the format 1y, 10M, 10m, 200s, 34d, 1y23d, 2d20s, etc." required:"true"`
+	Period    string `short:"p" long:"period" description:"Time period parameter in the format 1y, 10M, 10m, 200s, 34d, 1y23d, 2d20s, etc." required:"true"`
 	logLevel  slog.Level
 }
 
@@ -45,13 +45,13 @@ func parseFlags() error {
 }
 
 func run() error {
-	seconds, err := AgeToSeconds(opts.Age)
+	seconds, err := PeriodToSeconds(opts.Period)
 	if err != nil {
-		fmt.Printf("Error parsing age parameter: %v\n", err)
+		fmt.Printf("Error parsing period parameter: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s = %f seconds\n", opts.Age, seconds)
+	fmt.Printf("%s = %f seconds\n", opts.Period, seconds)
 
 	t := showDateGivenSecondsAgo(time.Now(), seconds)
 	fmt.Printf("Date %d seconds ago: %s\n", int64(seconds), t.Format(time.RFC3339))
@@ -59,9 +59,9 @@ func run() error {
 	return nil
 }
 
-func AgeToSeconds(age string) (float64, error) {
+func PeriodToSeconds(period string) (float64, error) {
 	re := regexp.MustCompile(`(\d+(\.\d+)?)([yMmdsw])`)
-	matches := re.FindAllStringSubmatch(age, -1)
+	matches := re.FindAllStringSubmatch(period, -1)
 
 	var totalSeconds float64
 
