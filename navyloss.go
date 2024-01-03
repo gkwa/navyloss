@@ -76,6 +76,7 @@ func DurationFromString(period string) (time.Duration, error) {
 		case "y":
 			totalDuration += time.Duration(value) * 365 * 24 * time.Hour
 		case "M":
+			// FIXME: 30 is not correct, should be ~30.44
 			totalDuration += time.Duration(value) * 30 * 24 * time.Hour
 		case "w":
 			totalDuration += time.Duration(value) * 7 * 24 * time.Hour
