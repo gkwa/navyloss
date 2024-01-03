@@ -45,21 +45,21 @@ func parseFlags() error {
 }
 
 func run() error {
-	seconds, err := PeriodToSeconds(opts.Period)
+	duration, err := DurationFromString(opts.Period)
 	if err != nil {
 		fmt.Printf("Error parsing period parameter: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s = %f seconds\n", opts.Period, seconds)
+	fmt.Printf("%s = %f seconds\n", opts.Period, duration.Seconds())
 
-	t := showDateGivenSecondsAgo(time.Now(), seconds)
-	fmt.Printf("Date %d seconds ago: %s\n", int64(seconds), t.Format(time.RFC3339))
+	t := showDateGivenSecondsAgo(time.Now(), duration.Seconds())
+	fmt.Printf("Date %d seconds ago: %s\n", int64(duration), t.Format(time.RFC3339))
 
 	return nil
 }
 
-func PeriodToSeconds(period string) (float64, error) {
+func DurationFromString(period string) (time.Duration, error) {
 	re := regexp.MustCompile(`(\d+(\.\d+)?)([yMwdhms])`)
 	matches := re.FindAllStringSubmatch(period, -1)
 
@@ -90,7 +90,7 @@ func PeriodToSeconds(period string) (float64, error) {
 		}
 	}
 
-	return totalSeconds, nil
+	return time.Duration(totalSeconds), nil
 }
 
 func showDateGivenSecondsAgo(currentTime time.Time, seconds float64) time.Time {
