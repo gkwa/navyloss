@@ -84,7 +84,7 @@ func PeriodToSeconds(period string) (float64, error) {
 		case "h":
 			totalSeconds += float64(value) * (60 * time.Minute).Seconds() // seconds in an hour
 		case "m":
-			totalSeconds += float64(value) * (1 * time.Minute * 60).Seconds() // seconds in a minute
+			totalSeconds += float64(value) * (1 * time.Minute).Seconds() // seconds in a minute
 		case "s":
 			totalSeconds += float64(value)
 		}
