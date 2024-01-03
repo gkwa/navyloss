@@ -51,7 +51,7 @@ func run() error {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s = %f seconds\n", opts.Period, duration.Seconds())
+	fmt.Printf("%s = %f seconds, %v\n", opts.Period, duration.Seconds(), duration)
 
 	t := showDateGivenSecondsAgo(time.Now(), duration.Seconds())
 	fmt.Printf("Date %d seconds ago: %s\n", int64(duration), t.Format(time.RFC3339))
@@ -63,7 +63,7 @@ func DurationFromString(period string) (time.Duration, error) {
 	re := regexp.MustCompile(`(\d+(\.\d+)?)([yMwdhms])`)
 	matches := re.FindAllStringSubmatch(period, -1)
 
-	var totalSeconds float64
+	var totalDuration time.Duration
 
 	for _, match := range matches {
 		value, err := strconv.ParseFloat(match[1], 64)
@@ -74,23 +74,35 @@ func DurationFromString(period string) (time.Duration, error) {
 		unit := match[3]
 		switch unit {
 		case "y":
-			totalSeconds += float64(value) * (60 * time.Minute * 24 * 365).Seconds() // seconds in a year
+			totalDuration += time.Duration(value) * 365 * 24 * time.Hour
 		case "M":
-			totalSeconds += float64(value) * (60 * time.Minute * 24 * 7 * 30).Seconds() // seconds in a month
+			totalDuration += time.Duration(value) * 30 * 24 * time.Hour
 		case "w":
-			totalSeconds += float64(value) * (60 * time.Minute * 24 * 7).Seconds() // seconds in a week
+			totalDuration += time.Duration(value) * 7 * 24 * time.Hour
 		case "d":
-			totalSeconds += float64(value) * (60 * time.Minute * 24).Seconds() // seconds in a day
+			totalDuration += time.Duration(value) * 24 * time.Hour
 		case "h":
-			totalSeconds += float64(value) * (60 * time.Minute).Seconds() // seconds in an hour
+			totalDuration += time.Duration(value) * time.Hour
 		case "m":
-			totalSeconds += float64(value) * (1 * time.Minute).Seconds() // seconds in a minute
+			totalDuration += time.Duration(value) * time.Minute
 		case "s":
-			totalSeconds += float64(value)
+			totalDuration += time.Duration(value) * time.Second
+		default:
+			return 0, fmt.Errorf("unknown duration unit: %s", unit)
 		}
+
+		slog.Debug("parsed duration",
+			"value", value,
+			"unit", unit,
+			"totalDuration", totalDuration,
+		)
 	}
 
-	return time.Duration(totalSeconds * float64(time.Second)), nil
+	slog.Debug("parsed duration",
+		"totalDuration", totalDuration,
+	)
+
+	return totalDuration, nil
 }
 
 func showDateGivenSecondsAgo(currentTime time.Time, seconds float64) time.Time {
