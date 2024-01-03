@@ -90,7 +90,7 @@ func DurationFromString(period string) (time.Duration, error) {
 		}
 	}
 
-	return time.Duration(totalSeconds), nil
+	return time.Duration(totalSeconds * float64(time.Second)), nil
 }
 
 func showDateGivenSecondsAgo(currentTime time.Time, seconds float64) time.Time {
